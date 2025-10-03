@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asipu Analytics Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@13.1.0/dist/handsontable.full.min.css">
-    <style>
+    <style id="customStyles">
         * {
             margin: 0;
             padding: 0;
@@ -74,7 +74,7 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--secondary-color, #764ba2) 100%);
             color: white;
             padding: 20px;
             display: flex;
@@ -100,16 +100,88 @@
             font-size: 12px;
         }
 
-        .logout-btn {
+        .logout-btn, .customize-btn {
             padding: 8px 16px;
             background: rgba(255,255,255,0.2);
             border: 2px solid white;
             color: white;
             border-radius: 5px;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* TOP NAVIGATION - Main Sections */
+        .logout-btn:hover, .customize-btn:hover {
+            background: white;
+            color: var(--primary-color, #667eea);
+        }
+
+        /* Customization Panel */
+        .customize-panel {
+            position: fixed;
+            right: -350px;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .customize-panel.open {
+            right: 0;
+        }
+
+        .customize-panel h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .customize-group {
+            margin-bottom: 25px;
+        }
+
+        .customize-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .customize-group input[type="color"],
+        .customize-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 5px;
+        }
+
+        .close-customize {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-customize {
+            width: 100%;
+            padding: 10px;
+            background: #f59e0b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* TOP NAVIGATION */
         .main-nav {
             background: white;
             padding: 0;
@@ -134,16 +206,16 @@
 
         .main-nav-btn:hover {
             background: #f9fafb;
-            color: #667eea;
+            color: var(--primary-color, #667eea);
         }
 
         .main-nav-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
+            color: var(--primary-color, #667eea);
+            border-bottom-color: var(--primary-color, #667eea);
             background: #f9fafb;
         }
 
-        /* Sub Navigation - Domain Tabs (only for Raw Data section) */
+        /* Sub Navigation */
         .sub-nav {
             display: none;
             background: #f9fafb;
@@ -167,12 +239,12 @@
         }
 
         .domain-tab.active {
-            background: #667eea;
+            background: var(--primary-color, #667eea);
             color: white;
-            border-color: #667eea;
+            border-color: var(--primary-color, #667eea);
         }
 
-        /* Time Navigation (for Raw Data) */
+        /* Time Navigation */
         .time-navigation {
             display: none;
             padding: 20px;
@@ -212,18 +284,26 @@
         }
 
         .year-btn.active, .month-btn.active {
-            background: #667eea;
+            background: var(--primary-color, #667eea);
             color: white;
-            border-color: #667eea;
+            border-color: var(--primary-color, #667eea);
         }
 
-        /* Dashboard View */
-        .dashboard-view {
+        /* Views */
+        .dashboard-view, .price-list-view, .financials-view, .exchange-view {
             padding: 20px;
             display: none;
         }
 
-        .dashboard-view.active {
+        .dashboard-view.active, .price-list-view.active, .financials-view.active, .exchange-view.active {
+            display: block;
+        }
+
+        .raw-data-view {
+            display: none;
+        }
+
+        .raw-data-view.active {
             display: block;
         }
 
@@ -253,45 +333,6 @@
             color: #1f2937;
         }
 
-        /* Price List View */
-        .price-list-view {
-            padding: 20px;
-            display: none;
-        }
-
-        .price-list-view.active {
-            display: block;
-        }
-
-        /* Financials View */
-        .financials-view {
-            padding: 20px;
-            display: none;
-        }
-
-        .financials-view.active {
-            display: block;
-        }
-
-        /* Exchange View */
-        .exchange-view {
-            padding: 20px;
-            display: none;
-        }
-
-        .exchange-view.active {
-            display: block;
-        }
-
-        /* Raw Data View */
-        .raw-data-view {
-            display: none;
-        }
-
-        .raw-data-view.active {
-            display: block;
-        }
-
         /* Toolbar */
         .toolbar {
             background: white;
@@ -305,7 +346,7 @@
 
         .btn {
             padding: 10px 20px;
-            background: #667eea;
+            background: var(--primary-color, #667eea);
             color: white;
             border: none;
             border-radius: 5px;
@@ -350,7 +391,7 @@
             border-radius: 8px;
             text-align: center;
             font-weight: 600;
-            color: #667eea;
+            color: var(--primary-color, #667eea);
         }
 
         .view-only-banner {
@@ -368,13 +409,17 @@
         .file-input {
             display: none;
         }
+
+        .today-indicator {
+            background: #fbbf24 !important;
+        }
     </style>
 </head>
 <body>
     <!-- Login -->
     <div class="login-container" id="loginScreen">
         <div class="login-box">
-            <h1>🔐 Asipu Analytics</h1>
+            <h1 id="appTitle">🔐 Asipu Analytics</h1>
             <input type="text" id="username" placeholder="Username" />
             <input type="password" id="password" placeholder="Password" />
             <button onclick="login()">Login</button>
@@ -386,12 +431,41 @@
     <div id="app">
         <!-- Header -->
         <div class="header">
-            <h1>📊 Asipu Analytics Dashboard</h1>
+            <h1 id="mainTitle">📊 Asipu Analytics Dashboard</h1>
             <div class="user-info">
                 <span id="userName"></span>
                 <span class="user-role" id="userRole"></span>
+                <button class="customize-btn" id="customizeBtn" onclick="openCustomize()" style="display:none;">🎨 Customize</button>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
+        </div>
+
+        <!-- Customization Panel -->
+        <div class="customize-panel" id="customizePanel">
+            <button class="close-customize" onclick="closeCustomize()">✕ Close</button>
+            <h2>🎨 Customize Dashboard</h2>
+
+            <div class="customize-group">
+                <label>App Title:</label>
+                <input type="text" id="customTitle" placeholder="Asipu Analytics Dashboard" onchange="applyCustomization()">
+            </div>
+
+            <div class="customize-group">
+                <label>Primary Color (Headers, Buttons):</label>
+                <input type="color" id="customPrimaryColor" value="#667eea" onchange="applyCustomization()">
+            </div>
+
+            <div class="customize-group">
+                <label>Secondary Color (Gradient):</label>
+                <input type="color" id="customSecondaryColor" value="#764ba2" onchange="applyCustomization()">
+            </div>
+
+            <div class="customize-group">
+                <label>Login Title:</label>
+                <input type="text" id="customLoginTitle" placeholder="Asipu Analytics" onchange="applyCustomization()">
+            </div>
+
+            <button class="reset-customize" onclick="resetCustomization()">🔄 Reset to Default</button>
         </div>
 
         <!-- View Only Banner -->
@@ -399,23 +473,23 @@
             🔒 VIEW ONLY MODE
         </div>
 
-        <!-- MAIN NAVIGATION (4 Top Sections) -->
+        <!-- MAIN NAVIGATION -->
         <div class="main-nav">
-            <button class="main-nav-btn active" onclick="showSection('dashboard')">📈 Dashboard</button>
-            <button class="main-nav-btn" onclick="showSection('raw-data')">📊 Raw Data</button>
+            <button class="main-nav-btn" onclick="showSection('dashboard')">📈 Dashboard</button>
+            <button class="main-nav-btn active" onclick="showSection('raw-data')">📊 Raw Data</button>
             <button class="main-nav-btn" onclick="showSection('price-list')">💰 Price List</button>
             <button class="main-nav-btn" onclick="showSection('financials')">💼 Financials</button>
             <button class="main-nav-btn" onclick="showSection('exchange')">💱 Exchange</button>
         </div>
 
-        <!-- Domain Tabs (for Raw Data only) -->
-        <div class="sub-nav" id="domainNav">
+        <!-- Domain Tabs -->
+        <div class="sub-nav active" id="domainNav">
             <button class="domain-tab active" onclick="switchDomain('asipu.de')">Asipu.de</button>
             <button class="domain-tab" onclick="switchDomain('asipu.fi')">Asipu.fi</button>
         </div>
 
-        <!-- Time Navigation (for Raw Data only) -->
-        <div class="time-navigation" id="timeNav">
+        <!-- Time Navigation -->
+        <div class="time-navigation active" id="timeNav">
             <div class="nav-section">
                 <div class="nav-label">Year:</div>
                 <div class="year-buttons" id="yearButtons"></div>
@@ -427,10 +501,10 @@
         </div>
 
         <!-- DASHBOARD VIEW -->
-        <div class="dashboard-view active" id="dashboardView">
+        <div class="dashboard-view" id="dashboardView">
             <div class="dashboard-cards">
                 <div class="dashboard-card">
-                    <h3>Total Revenue (All Domains)</h3>
+                    <h3>Total Revenue</h3>
                     <div class="value">€0</div>
                 </div>
                 <div class="dashboard-card">
@@ -456,8 +530,8 @@
             </div>
         </div>
 
-        <!-- RAW DATA VIEW -->
-        <div class="raw-data-view" id="rawDataView">
+        <!-- RAW DATA VIEW (DEFAULT) -->
+        <div class="raw-data-view active" id="rawDataView">
             <div class="current-view" id="currentView">Asipu.de - 2025 - January</div>
             <div class="toolbar" id="toolbar">
                 <button class="btn" id="addBtn" onclick="addRow()">➕ Add Day</button>
@@ -507,7 +581,7 @@
         };
 
         let currentUser = null;
-        let currentSection = 'dashboard';
+        let currentSection = 'raw-data'; // DEFAULT: Raw Data opens first
         let currentDomain = 'asipu.de';
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
@@ -516,8 +590,9 @@
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Login
+        // Load customizations on page load
         window.onload = function() {
+            loadCustomization();
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser) {
                 currentUser = JSON.parse(loggedInUser);
@@ -547,6 +622,11 @@
                            user.role === 'editor' ? 'Editor Admin' : 'View Only';
             document.getElementById('userRole').textContent = roleText;
 
+            // Show customize button for Mohammed and Erica only
+            if (user.role === 'super_admin' || user.role === 'editor') {
+                document.getElementById('customizeBtn').style.display = 'inline-block';
+            }
+
             if (user.role === 'viewer') {
                 document.getElementById('viewOnlyBanner').classList.add('active');
             }
@@ -559,11 +639,62 @@
             location.reload();
         }
 
+        // CUSTOMIZATION FUNCTIONS
+        function openCustomize() {
+            document.getElementById('customizePanel').classList.add('open');
+            // Load current values
+            const saved = JSON.parse(localStorage.getItem('asipu_customization') || '{}');
+            document.getElementById('customTitle').value = saved.title || 'Asipu Analytics Dashboard';
+            document.getElementById('customPrimaryColor').value = saved.primaryColor || '#667eea';
+            document.getElementById('customSecondaryColor').value = saved.secondaryColor || '#764ba2';
+            document.getElementById('customLoginTitle').value = saved.loginTitle || 'Asipu Analytics';
+        }
+
+        function closeCustomize() {
+            document.getElementById('customizePanel').classList.remove('open');
+        }
+
+        function applyCustomization() {
+            const title = document.getElementById('customTitle').value || 'Asipu Analytics Dashboard';
+            const primaryColor = document.getElementById('customPrimaryColor').value;
+            const secondaryColor = document.getElementById('customSecondaryColor').value;
+            const loginTitle = document.getElementById('customLoginTitle').value || 'Asipu Analytics';
+
+            // Apply changes
+            document.getElementById('mainTitle').textContent = '📊 ' + title;
+            document.getElementById('appTitle').textContent = '🔐 ' + loginTitle;
+            document.documentElement.style.setProperty('--primary-color', primaryColor);
+            document.documentElement.style.setProperty('--secondary-color', secondaryColor);
+
+            // Save to localStorage
+            localStorage.setItem('asipu_customization', JSON.stringify({
+                title, primaryColor, secondaryColor, loginTitle
+            }));
+        }
+
+        function loadCustomization() {
+            const saved = JSON.parse(localStorage.getItem('asipu_customization') || '{}');
+            if (saved.title) {
+                document.getElementById('mainTitle').textContent = '📊 ' + saved.title;
+                document.getElementById('appTitle').textContent = '🔐 ' + (saved.loginTitle || 'Asipu Analytics');
+                document.documentElement.style.setProperty('--primary-color', saved.primaryColor || '#667eea');
+                document.documentElement.style.setProperty('--secondary-color', saved.secondaryColor || '#764ba2');
+            }
+        }
+
+        function resetCustomization() {
+            if (confirm('Reset all customizations to default?')) {
+                localStorage.removeItem('asipu_customization');
+                location.reload();
+            }
+        }
+
         // Initialize
         function initializeApp() {
             generateYearButtons();
             generateMonthButtons();
             initializeSpreadsheets();
+            scrollToTodaysDate(); // AUTO-SCROLL TO TODAY
         }
 
         function generateYearButtons() {
@@ -603,7 +734,6 @@
                 view.classList.remove('active');
             });
 
-            // Show/hide domain nav and time nav
             const domainNav = document.getElementById('domainNav');
             const timeNav = document.getElementById('timeNav');
 
@@ -611,6 +741,7 @@
                 domainNav.classList.add('active');
                 timeNav.classList.add('active');
                 document.getElementById('rawDataView').classList.add('active');
+                scrollToTodaysDate();
             } else {
                 domainNav.classList.remove('active');
                 timeNav.classList.remove('active');
@@ -637,6 +768,7 @@
             });
             loadData();
             updateCurrentView();
+            scrollToTodaysDate();
         }
 
         function selectYear(year) {
@@ -647,6 +779,7 @@
             });
             loadData();
             updateCurrentView();
+            scrollToTodaysDate();
         }
 
         function selectMonth(monthIndex) {
@@ -655,6 +788,7 @@
             document.querySelectorAll('.month-btn')[monthIndex].classList.add('active');
             loadData();
             updateCurrentView();
+            scrollToTodaysDate();
         }
 
         function updateCurrentView() {
@@ -662,7 +796,37 @@
                 `${currentDomain.toUpperCase()} - ${currentYear} - ${months[currentMonth]}`;
         }
 
-        // Columns for Raw Data
+        // SCROLL TO TODAY'S DATE
+        function scrollToTodaysDate() {
+            setTimeout(() => {
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
+                const data = hot.getData();
+
+                let todayRowIndex = -1;
+                data.forEach((row, index) => {
+                    if (row[0] && row[0].toString().startsWith(todayStr.substring(0, 10))) {
+                        todayRowIndex = index;
+                    }
+                });
+
+                if (todayRowIndex !== -1) {
+                    hot.scrollViewportTo(todayRowIndex, 0);
+                    // Highlight today's row
+                    hot.updateSettings({
+                        cells: function(row, col) {
+                            const cellProperties = {};
+                            if (row === todayRowIndex) {
+                                cellProperties.className = 'today-indicator';
+                            }
+                            return cellProperties;
+                        }
+                    });
+                }
+            }, 500);
+        }
+
+        // Columns
         const columns = [
             { data: 0, type: 'date', dateFormat: 'YYYY-MM-DD', title: 'Date', width: 100 },
             { data: 1, type: 'text', title: 'Product', width: 100 },
@@ -690,10 +854,10 @@
             { data: 23, type: 'numeric', title: 'COGS $', numericFormat: { pattern: '0,0.00' }, width: 100 },
             { data: 24, type: 'numeric', title: 'COGS €', numericFormat: { pattern: '0,0.00' }, width: 100 },
             { data: 25, type: 'numeric', title: 'Payment VAT', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 26, type: 'numeric', title: 'Shopify Order Fee', numericFormat: { pattern: '0.00' }, width: 120 },
+            { data: 26, type: 'numeric', title: 'Shopify Fee', numericFormat: { pattern: '0.00' }, width: 100 },
             { data: 27, type: 'numeric', title: 'Provision Rate', numericFormat: { pattern: '0.00' }, width: 100 },
-            { data: 28, type: 'numeric', title: 'Refund Provision', numericFormat: { pattern: '0.00' }, width: 120 },
-            { data: 29, type: 'numeric', title: 'Adj Net Revenue', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 28, type: 'numeric', title: 'Refund', numericFormat: { pattern: '0.00' }, width: 100 },
+            { data: 29, type: 'numeric', title: 'Adj Revenue', numericFormat: { pattern: '0,0.00' }, width: 120 },
             { data: 30, type: 'numeric', title: 'Adj Gross Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
             { data: 31, type: 'numeric', title: 'Gross Margin %', numericFormat: { pattern: '0.00' }, width: 120 },
             { data: 32, type: 'numeric', title: 'Adj Net Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
@@ -706,7 +870,6 @@
         function initializeSpreadsheets() {
             const isViewOnly = currentUser.role === 'viewer';
 
-            // Raw Data Spreadsheet
             hot = new Handsontable(document.getElementById('spreadsheet'), {
                 data: [],
                 columns: columns,
@@ -722,7 +885,6 @@
                 manualColumnResize: true
             });
 
-            // Price List Spreadsheet
             priceListHot = new Handsontable(document.getElementById('priceListSpreadsheet'), {
                 data: [
                     ['AktivJoint', '1-Pack', '29.99', '€'],
@@ -740,7 +902,6 @@
                 readOnly: isViewOnly
             });
 
-            // Financials Spreadsheet
             financialsHot = new Handsontable(document.getElementById('financialsSpreadsheet'), {
                 data: [
                     ['Total Revenue', '0', '€'],
@@ -756,7 +917,6 @@
                 readOnly: isViewOnly
             });
 
-            // Exchange Spreadsheet
             exchangeHot = new Handsontable(document.getElementById('exchangeSpreadsheet'), {
                 data: [
                     ['USD', 'EUR', '0.85'],
@@ -764,7 +924,7 @@
                     ['GBP', 'EUR', '1.15'],
                     ['EUR', 'GBP', '0.87']
                 ],
-                colHeaders: ['From Currency', 'To Currency', 'Rate'],
+                colHeaders: ['From', 'To', 'Rate'],
                 height: 400,
                 licenseKey: 'non-commercial-and-evaluation',
                 readOnly: isViewOnly
@@ -773,14 +933,13 @@
             loadData();
         }
 
-        // Data Management
         function getStorageKey() {
             return `asipu_${currentDomain}_${currentYear}_${currentMonth}`;
         }
 
         function saveData() {
             if (currentUser.role === 'viewer') {
-                alert('⚠️ You do not have permission to save.');
+                alert('⚠️ No permission to save.');
                 return;
             }
             const data = hot.getData();
@@ -795,7 +954,7 @@
         }
 
         function generateEmptyRow() {
-            const date = new Date(currentYear, currentMonth, 1).toISOString().split('T')[0];
+            const date = new Date().toISOString().split('T')[0]; // TODAY'S DATE
             return [date, '', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 'USD', 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, ''];
         }
 
