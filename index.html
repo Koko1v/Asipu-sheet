@@ -104,8 +104,12 @@
             gap: 15px;
         }
 
-        .user-name {
-            font-size: 16px;
+        .user-role {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .logout-btn {
@@ -163,9 +167,6 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
         }
 
         .version-list {
@@ -278,12 +279,60 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* Year and Month Navigation */
+        /* Dashboard Sections */
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            margin: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .section-card {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .section-card.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .section-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .section-card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .section-card .label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Time Navigation */
         .time-navigation {
             padding: 20px;
             background: white;
             margin: 0 20px;
-            margin-top: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
@@ -326,39 +375,11 @@
             box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
         }
 
-        /* Stats Dashboard */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .stat-card h3 {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 8px;
-        }
-
-        .stat-card .value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
         /* Toolbar */
         .toolbar {
             background: white;
             padding: 15px 20px;
-            margin: 0 20px;
-            margin-bottom: 20px;
+            margin: 0 20px 20px 20px;
             display: flex;
             gap: 10px;
             align-items: center;
@@ -379,17 +400,23 @@
             transition: all 0.3s;
         }
 
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             background: #5568d3;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .btn-success {
             background: #10b981;
         }
 
-        .btn-success:hover {
+        .btn-success:hover:not(:disabled) {
             background: #059669;
         }
 
@@ -397,11 +424,11 @@
             background: #f59e0b;
         }
 
-        .btn-warning:hover {
+        .btn-warning:hover:not(:disabled) {
             background: #d97706;
         }
 
-        /* Spreadsheet Container */
+        /* Container */
         .container {
             padding: 0 20px 20px 20px;
         }
@@ -420,7 +447,7 @@
         .current-view {
             padding: 15px 20px;
             background: #f9fafb;
-            margin: 0 20px;
+            margin: 0 20px 20px 20px;
             border-radius: 8px;
             text-align: center;
             font-weight: 600;
@@ -438,6 +465,19 @@
         }
 
         .preview-mode-banner.active {
+            display: block;
+        }
+
+        .view-only-banner {
+            background: #ef4444;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .view-only-banner.active {
             display: block;
         }
     </style>
@@ -460,8 +500,14 @@
             <h1>📊 Asipu Analytics Dashboard</h1>
             <div class="user-info">
                 <span class="user-name" id="userName"></span>
+                <span class="user-role" id="userRole"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
+        </div>
+
+        <!-- View Only Banner -->
+        <div class="view-only-banner" id="viewOnlyBanner">
+            🔒 VIEW ONLY MODE - You can only view data. No editing allowed.
         </div>
 
         <!-- Preview Mode Banner -->
@@ -484,7 +530,41 @@
             <button class="domain-tab" onclick="switchDomain('asipu.fi')">Asipu.fi</button>
         </div>
 
-        <!-- Year and Month Navigation -->
+        <!-- Dashboard Sections -->
+        <div class="dashboard-sections">
+            <div class="section-card active" onclick="selectSection('raw-data')">
+                <h3>📊 Raw Data</h3>
+                <div class="value" id="rawDataCount">0</div>
+                <div class="label">Daily Records</div>
+            </div>
+            <div class="section-card" onclick="selectSection('fb-ads')">
+                <h3>📱 FB Ads</h3>
+                <div class="value" id="fbAdsSpend">€0</div>
+                <div class="label">Total Spend</div>
+            </div>
+            <div class="section-card" onclick="selectSection('revenue')">
+                <h3>💰 Revenue</h3>
+                <div class="value" id="totalRevenue">€0</div>
+                <div class="label">Sales Revenue</div>
+            </div>
+            <div class="section-card" onclick="selectSection('orders')">
+                <h3>📦 Orders</h3>
+                <div class="value" id="totalOrders">0</div>
+                <div class="label">Total Orders</div>
+            </div>
+            <div class="section-card" onclick="selectSection('profit')">
+                <h3>💵 Profit</h3>
+                <div class="value" id="netProfit">€0</div>
+                <div class="label">Net Profit</div>
+            </div>
+            <div class="section-card" onclick="selectSection('products')">
+                <h3>🏷️ Products</h3>
+                <div class="value" id="productCount">8</div>
+                <div class="label">Active Products</div>
+            </div>
+        </div>
+
+        <!-- Time Navigation -->
         <div class="time-navigation">
             <div class="nav-section">
                 <div class="nav-label">Select Year:</div>
@@ -496,39 +576,15 @@
             </div>
         </div>
 
-        <div class="current-view" id="currentView">Asipu.de - 2025 - January - Day View</div>
-
-        <!-- Stats Dashboard -->
-        <div class="stats" id="stats">
-            <div class="stat-card">
-                <h3>Total Ad Spend</h3>
-                <div class="value" id="totalSpend">€0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Revenue</h3>
-                <div class="value" id="totalRevenue">€0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Orders</h3>
-                <div class="value" id="totalOrders">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Net Profit</h3>
-                <div class="value" id="totalProfit">€0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Average ROI</h3>
-                <div class="value" id="avgROI">0%</div>
-            </div>
-        </div>
+        <div class="current-view" id="currentView">Asipu.de - 2025 - January - Raw Data View</div>
 
         <!-- Toolbar -->
-        <div class="toolbar">
-            <button class="btn" onclick="addRow()">➕ Add Day</button>
-            <button class="btn" onclick="saveData()">💾 Save Data</button>
+        <div class="toolbar" id="toolbar">
+            <button class="btn" id="addBtn" onclick="addRow()">➕ Add Day</button>
+            <button class="btn" id="saveBtn" onclick="saveData()">💾 Save Data</button>
             <button class="btn btn-warning" onclick="openVersionHistory()">📜 Version History</button>
             <button class="btn btn-success" onclick="exportToExcel()">📥 Export Excel</button>
-            <label for="file-upload" class="btn">📂 Import Excel</label>
+            <label for="file-upload" class="btn" id="importLabel">📂 Import Excel</label>
             <input id="file-upload" type="file" class="file-input" accept=".xlsx,.xls" onchange="importExcel(event)">
         </div>
 
@@ -541,19 +597,21 @@
     <script src="https://cdn.jsdelivr.net/npm/handsontable@13.1.0/dist/handsontable.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // User Management System
+        // User Management System with Roles
         const users = {
-            'admin': 'admin123',
-            'worker1': 'worker1',
-            'worker2': 'worker2',
-            'manager': 'manager123'
+            'Mohammed': { password: 'admin123', role: 'super_admin', displayName: 'Mohammed' },
+            'Erica': { password: 'editor123', role: 'editor', displayName: 'Erica' },
+            'asipu-team': { password: 'viewer123', role: 'viewer', displayName: 'Asipu Team' }
         };
+
+        let currentUser = null;
 
         // Check if user is logged in
         window.onload = function() {
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser) {
-                showApp(loggedInUser);
+                currentUser = JSON.parse(loggedInUser);
+                showApp(currentUser);
             }
         };
 
@@ -561,19 +619,38 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            if (users[username] && users[username] === password) {
-                localStorage.setItem('loggedInUser', username);
-                showApp(username);
+            if (users[username] && users[username].password === password) {
+                currentUser = users[username];
+                localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
+                showApp(currentUser);
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
             }
         }
 
-        function showApp(username) {
+        function showApp(user) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-            document.getElementById('userName').textContent = 'User: ' + username;
+            document.getElementById('userName').textContent = user.displayName;
+
+            // Set role badge
+            const roleText = user.role === 'super_admin' ? 'Full Admin' : 
+                           user.role === 'editor' ? 'Editor Admin' : 'View Only';
+            document.getElementById('userRole').textContent = roleText;
+
+            // Apply role restrictions
+            applyRoleRestrictions(user.role);
+
             initializeApp();
+        }
+
+        function applyRoleRestrictions(role) {
+            if (role === 'viewer') {
+                document.getElementById('viewOnlyBanner').classList.add('active');
+                document.getElementById('addBtn').disabled = true;
+                document.getElementById('saveBtn').disabled = true;
+                document.getElementById('importLabel').style.display = 'none';
+            }
         }
 
         function logout() {
@@ -585,6 +662,7 @@
         let currentDomain = 'asipu.de';
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
+        let currentSection = 'raw-data';
         let hot;
         let previewMode = false;
 
@@ -623,6 +701,14 @@
                 btn.onclick = () => selectMonth(index);
                 container.appendChild(btn);
             });
+        }
+
+        // Select Section
+        function selectSection(section) {
+            currentSection = section;
+            document.querySelectorAll('.section-card').forEach(card => card.classList.remove('active'));
+            event.target.closest('.section-card').classList.add('active');
+            updateCurrentView();
         }
 
         // Switch Domain
@@ -665,33 +751,56 @@
 
         // Update Current View Display
         function updateCurrentView() {
-            const view = `${currentDomain.toUpperCase()} - ${currentYear} - ${months[currentMonth]} - Daily View`;
+            const sectionName = currentSection.replace('-', ' ').toUpperCase();
+            const view = `${currentDomain.toUpperCase()} - ${currentYear} - ${months[currentMonth]} - ${sectionName}`;
             document.getElementById('currentView').textContent = view;
         }
 
-        // Column Configuration (Daily tracking)
+        // Column Configuration matching Excel structure
         const columns = [
             { data: 0, type: 'date', dateFormat: 'YYYY-MM-DD', title: 'Date', width: 100 },
             { data: 1, type: 'text', title: 'Product', width: 100 },
-            { data: 2, type: 'text', title: 'Campaign', width: 150 },
-            { data: 3, type: 'numeric', title: 'Ad Spend €', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 4, type: 'numeric', title: 'Impressions', numericFormat: { pattern: '0,0' }, width: 100 },
-            { data: 5, type: 'numeric', title: 'Clicks', numericFormat: { pattern: '0,0' }, width: 80 },
-            { data: 6, type: 'numeric', title: 'CTR %', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 7, type: 'numeric', title: 'CPC', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 8, type: 'numeric', title: 'Revenue €', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 9, type: 'numeric', title: 'Orders', numericFormat: { pattern: '0' }, width: 80 },
-            { data: 10, type: 'numeric', title: 'AOV', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 11, type: 'numeric', title: 'COGS €', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 12, type: 'numeric', title: 'Gross Profit €', numericFormat: { pattern: '0,0.00' }, width: 120 },
-            { data: 13, type: 'numeric', title: 'Net Profit €', numericFormat: { pattern: '0,0.00' }, width: 120 },
-            { data: 14, type: 'numeric', title: 'ROI %', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 15, type: 'text', title: 'Notes', width: 200 }
+            { data: 2, type: 'text', title: 'Campaign Name', width: 150 },
+            { data: 3, type: 'text', title: 'Ad Set Name', width: 150 },
+            { data: 4, type: 'numeric', title: 'Ad Spend €', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 5, type: 'numeric', title: 'Impressions', numericFormat: { pattern: '0,0' }, width: 100 },
+            { data: 6, type: 'numeric', title: 'Clicks', numericFormat: { pattern: '0,0' }, width: 80 },
+            { data: 7, type: 'numeric', title: 'CTR %', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 8, type: 'numeric', title: 'CPC', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 9, type: 'numeric', title: 'CPM', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 10, type: 'numeric', title: 'CVR', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 11, type: 'numeric', title: 'CPA', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 12, type: 'numeric', title: 'Sales Revenue', numericFormat: { pattern: '0,0.00' }, width: 120 },
+            { data: 13, type: 'numeric', title: 'AOV', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 14, type: 'numeric', title: 'Orders Total', numericFormat: { pattern: '0' }, width: 100 },
+            { data: 15, type: 'text', title: 'Check', width: 60 },
+            { data: 16, type: 'numeric', title: '1-Pack Orders', numericFormat: { pattern: '0' }, width: 90 },
+            { data: 17, type: 'numeric', title: '2-Pack Orders', numericFormat: { pattern: '0' }, width: 90 },
+            { data: 18, type: 'numeric', title: '3-Pack Orders', numericFormat: { pattern: '0' }, width: 90 },
+            { data: 19, type: 'numeric', title: '4-Pack Orders', numericFormat: { pattern: '0' }, width: 90 },
+            { data: 20, type: 'numeric', title: '5-Pack Orders', numericFormat: { pattern: '0' }, width: 90 },
+            { data: 21, type: 'numeric', title: '6-Pack Orders', numericFormat: { pattern: '0' }, width: 90 },
+            { data: 22, type: 'text', title: 'COG Currency', width: 80 },
+            { data: 23, type: 'numeric', title: 'COGS $', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 24, type: 'numeric', title: 'COGS €', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 25, type: 'numeric', title: 'Payment VAT', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 26, type: 'numeric', title: 'Shopify Order Fee', numericFormat: { pattern: '0.00' }, width: 120 },
+            { data: 27, type: 'numeric', title: 'Provision Rate', numericFormat: { pattern: '0.00' }, width: 100 },
+            { data: 28, type: 'numeric', title: 'Refund Provision', numericFormat: { pattern: '0.00' }, width: 120 },
+            { data: 29, type: 'numeric', title: 'Adj Net Revenue', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 30, type: 'numeric', title: 'Adj Gross Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 31, type: 'numeric', title: 'Gross Margin %', numericFormat: { pattern: '0.00' }, width: 120 },
+            { data: 32, type: 'numeric', title: 'Adj Net Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 33, type: 'numeric', title: 'Net Margin %', numericFormat: { pattern: '0.00' }, width: 120 },
+            { data: 34, type: 'numeric', title: 'Ads ROI', numericFormat: { pattern: '0.00' }, width: 100 },
+            { data: 35, type: 'text', title: 'Notes', width: 200 }
         ];
 
         // Initialize Spreadsheet
         function initializeSpreadsheet() {
             const container = document.getElementById('spreadsheet');
+            const isViewOnly = currentUser.role === 'viewer';
+
             hot = new Handsontable(container, {
                 data: [],
                 columns: columns,
@@ -700,14 +809,15 @@
                 height: 500,
                 licenseKey: 'non-commercial-and-evaluation',
                 stretchH: 'all',
-                contextMenu: true,
+                contextMenu: !isViewOnly,
                 filters: true,
                 dropdownMenu: true,
                 manualColumnResize: true,
+                readOnly: isViewOnly,
                 afterChange: function(changes, source) {
-                    if (source !== 'loadData' && !previewMode) {
+                    if (source !== 'loadData' && !previewMode && !isViewOnly) {
                         calculateMetrics();
-                        updateStats();
+                        updateDashboard();
                         autoSave();
                     }
                 }
@@ -719,48 +829,52 @@
         function calculateMetrics() {
             const data = hot.getData();
             data.forEach((row, index) => {
-                if (row[4] && row[5]) {
-                    hot.setDataAtCell(index, 6, (row[5] / row[4]) * 100);
+                if (row[5] && row[6]) hot.setDataAtCell(index, 7, (row[6] / row[5]) * 100);
+                if (row[4] && row[6]) hot.setDataAtCell(index, 8, row[4] / row[6]);
+                if (row[4] && row[5]) hot.setDataAtCell(index, 9, (row[4] / row[5]) * 1000);
+                if (row[12] && row[14]) hot.setDataAtCell(index, 13, row[12] / row[14]);
+                if (row[4] && row[14]) hot.setDataAtCell(index, 11, row[4] / row[14]);
+                if (row[12]) {
+                    const adjNetRevenue = row[12] - (row[28] || 0);
+                    hot.setDataAtCell(index, 29, adjNetRevenue);
                 }
-                if (row[3] && row[5]) {
-                    hot.setDataAtCell(index, 7, row[3] / row[5]);
+                if (row[29] && row[24]) {
+                    const adjGrossProfit = row[29] - row[24];
+                    hot.setDataAtCell(index, 30, adjGrossProfit);
                 }
-                if (row[8] && row[9]) {
-                    hot.setDataAtCell(index, 10, row[8] / row[9]);
+                if (row[30] && row[29]) {
+                    hot.setDataAtCell(index, 31, (row[30] / row[29]) * 100);
                 }
-                if (row[8] && row[11]) {
-                    hot.setDataAtCell(index, 12, row[8] - row[11]);
+                if (row[30] && row[4]) {
+                    const adjNetProfit = row[30] - row[4] - (row[26] || 0) - (row[25] || 0);
+                    hot.setDataAtCell(index, 32, adjNetProfit);
                 }
-                if (row[12] && row[3]) {
-                    hot.setDataAtCell(index, 13, row[12] - row[3]);
+                if (row[32] && row[29]) {
+                    hot.setDataAtCell(index, 33, (row[32] / row[29]) * 100);
                 }
-                if (row[13] && row[3]) {
-                    hot.setDataAtCell(index, 14, (row[13] / row[3]) * 100);
+                if (row[32] && row[4]) {
+                    hot.setDataAtCell(index, 34, (row[32] / row[4]) * 100);
                 }
             });
         }
 
-        // Update Stats
-        function updateStats() {
+        // Update Dashboard
+        function updateDashboard() {
             const data = hot.getData();
-            let totalSpend = 0, totalRevenue = 0, totalOrders = 0, totalProfit = 0, roiSum = 0, roiCount = 0;
+            let totalSpend = 0, totalRevenue = 0, totalOrders = 0, totalProfit = 0;
 
             data.forEach(row => {
-                totalSpend += row[3] || 0;
-                totalRevenue += row[8] || 0;
-                totalOrders += row[9] || 0;
-                totalProfit += row[13] || 0;
-                if (row[14]) {
-                    roiSum += row[14];
-                    roiCount++;
-                }
+                totalSpend += row[4] || 0;
+                totalRevenue += row[12] || 0;
+                totalOrders += row[14] || 0;
+                totalProfit += row[32] || 0;
             });
 
-            document.getElementById('totalSpend').textContent = '€' + totalSpend.toFixed(2);
+            document.getElementById('rawDataCount').textContent = data.length;
+            document.getElementById('fbAdsSpend').textContent = '€' + totalSpend.toFixed(2);
             document.getElementById('totalRevenue').textContent = '€' + totalRevenue.toFixed(2);
             document.getElementById('totalOrders').textContent = totalOrders;
-            document.getElementById('totalProfit').textContent = '€' + totalProfit.toFixed(2);
-            document.getElementById('avgROI').textContent = roiCount > 0 ? (roiSum / roiCount).toFixed(2) + '%' : '0%';
+            document.getElementById('netProfit').textContent = '€' + totalProfit.toFixed(2);
         }
 
         // Data Storage Key
@@ -780,17 +894,13 @@
 
             const version = {
                 timestamp: new Date().toISOString(),
-                user: localStorage.getItem('loggedInUser'),
+                user: currentUser.displayName,
                 data: JSON.stringify(data),
                 id: Date.now()
             };
 
-            history.unshift(version); // Add to beginning
-
-            // Keep last 50 versions
-            if (history.length > 50) {
-                history = history.slice(0, 50);
-            }
+            history.unshift(version);
+            if (history.length > 50) history = history.slice(0, 50);
 
             localStorage.setItem(historyKey, JSON.stringify(history));
         }
@@ -798,14 +908,18 @@
         // Save Data
         function saveData() {
             if (previewMode) {
-                alert('⚠️ Cannot save in preview mode. Exit preview first.');
+                alert('⚠️ Cannot save in preview mode.');
+                return;
+            }
+            if (currentUser.role === 'viewer') {
+                alert('⚠️ You do not have permission to save data.');
                 return;
             }
 
             const data = hot.getData();
             localStorage.setItem(getStorageKey(), JSON.stringify(data));
             saveVersionToHistory(data);
-            alert('✅ Data saved successfully for ' + months[currentMonth] + ' ' + currentYear + '!');
+            alert('✅ Data saved successfully!');
         }
 
         // Load Data
@@ -814,12 +928,12 @@
             const data = saved ? JSON.parse(saved) : [generateEmptyRow()];
             hot.loadData(data);
             calculateMetrics();
-            updateStats();
+            updateDashboard();
         }
 
         // Auto Save
         function autoSave() {
-            if (previewMode) return;
+            if (previewMode || currentUser.role === 'viewer') return;
 
             const data = hot.getData();
             localStorage.setItem(getStorageKey(), JSON.stringify(data));
@@ -829,13 +943,13 @@
         // Generate Empty Row
         function generateEmptyRow() {
             const date = new Date(currentYear, currentMonth, 1).toISOString().split('T')[0];
-            return [date, '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''];
+            return [date, '', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 'USD', 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, ''];
         }
 
         // Add Row
         function addRow() {
-            if (previewMode) {
-                alert('⚠️ Cannot add rows in preview mode.');
+            if (previewMode || currentUser.role === 'viewer') {
+                alert('⚠️ You cannot add rows.');
                 return;
             }
             const newRow = generateEmptyRow();
@@ -849,15 +963,15 @@
             const headers = columns.map(col => col.title);
             const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
             const wb = XLSX.utils.book_new();
-            const fileName = `${currentDomain}_${currentYear}_${months[currentMonth]}_${new Date().toISOString().split('T')[0]}.xlsx`;
-            XLSX.utils.book_append_sheet(wb, ws, months[currentMonth]);
+            const fileName = `${currentDomain}_${currentYear}_${months[currentMonth]}.xlsx`;
+            XLSX.utils.book_append_sheet(wb, ws, 'Raw Data');
             XLSX.writeFile(wb, fileName);
         }
 
         // Import Excel
         function importExcel(event) {
-            if (previewMode) {
-                alert('⚠️ Cannot import in preview mode.');
+            if (previewMode || currentUser.role === 'viewer') {
+                alert('⚠️ You cannot import data.');
                 return;
             }
             const file = event.target.files[0];
@@ -871,37 +985,31 @@
                     jsonData.shift();
                     hot.loadData(jsonData);
                     calculateMetrics();
-                    updateStats();
-                    alert('✅ File imported successfully!');
+                    updateDashboard();
+                    alert('✅ File imported!');
                 };
                 reader.readAsArrayBuffer(file);
             }
         }
 
-        // ========== VERSION HISTORY FUNCTIONS ==========
-
-        // Open Version History
+        // Version History Functions
         function openVersionHistory() {
             document.getElementById('versionHistorySidebar').classList.add('open');
             loadVersionHistory();
         }
 
-        // Close Version History
         function closeVersionHistory() {
             document.getElementById('versionHistorySidebar').classList.remove('open');
-            if (previewMode) {
-                exitPreviewMode();
-            }
+            if (previewMode) exitPreviewMode();
         }
 
-        // Load Version History List
         function loadVersionHistory() {
             const historyKey = getVersionHistoryKey();
             const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
             const container = document.getElementById('versionList');
 
             if (history.length === 0) {
-                container.innerHTML = '<div class="no-versions">No version history available yet.<br>Changes will be tracked automatically.</div>';
+                container.innerHTML = '<div class="no-versions">No version history available yet.</div>';
                 return;
             }
 
@@ -910,18 +1018,10 @@
             history.forEach((version, index) => {
                 const item = document.createElement('div');
                 item.className = 'version-item';
-                if (index === 0) {
-                    item.classList.add('active');
-                }
+                if (index === 0) item.classList.add('active');
 
                 const date = new Date(version.timestamp);
-                const timeStr = date.toLocaleString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                const timeStr = date.toLocaleString();
 
                 item.innerHTML = `
                     <div class="version-time">
@@ -931,7 +1031,7 @@
                     <div class="version-user">Edited by: ${version.user}</div>
                     <div class="version-actions">
                         <button class="preview-btn" onclick="previewVersion(${version.id})">👁️ Preview</button>
-                        ${index !== 0 ? `<button class="restore-btn" onclick="restoreVersion(${version.id})">↩️ Restore</button>` : ''}
+                        ${index !== 0 && currentUser.role !== 'viewer' ? `<button class="restore-btn" onclick="restoreVersion(${version.id})">↩️ Restore</button>` : ''}
                     </div>
                 `;
 
@@ -939,7 +1039,6 @@
             });
         }
 
-        // Preview Version
         function previewVersion(versionId) {
             const historyKey = getVersionHistoryKey();
             const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
@@ -951,11 +1050,10 @@
                 const data = JSON.parse(version.data);
                 hot.loadData(data);
                 calculateMetrics();
-                updateStats();
+                updateDashboard();
             }
         }
 
-        // Exit Preview Mode
         function exitPreviewMode() {
             if (previewMode) {
                 previewMode = false;
@@ -964,11 +1062,13 @@
             }
         }
 
-        // Restore Version
         function restoreVersion(versionId) {
-            if (!confirm('Are you sure you want to restore this version? Current data will be replaced.')) {
+            if (currentUser.role === 'viewer') {
+                alert('⚠️ You do not have permission to restore versions.');
                 return;
             }
+
+            if (!confirm('Restore this version? Current data will be replaced.')) return;
 
             const historyKey = getVersionHistoryKey();
             const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
@@ -977,17 +1077,16 @@
             if (version) {
                 const data = JSON.parse(version.data);
                 localStorage.setItem(getStorageKey(), JSON.stringify(data));
-                saveVersionToHistory(data); // Save restoration as new version
+                saveVersionToHistory(data);
 
                 exitPreviewMode();
                 loadData();
                 closeVersionHistory();
 
-                alert('✅ Version restored successfully!');
+                alert('✅ Version restored!');
             }
         }
 
-        // Auto-save interval
         setInterval(autoSave, 30000);
     </script>
 </body>
