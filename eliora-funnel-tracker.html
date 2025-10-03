@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliora Funnel Tracker - Excel Clone</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@13.1.0/dist/handsontable.full.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .toolbar {
+            background: white;
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        #spreadsheet {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-top: 15px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e5e7eb;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Eliora Funnel Tracker - Marketing Dashboard</h1>
+    </div>
+
+    <div class="toolbar">
+        <button class="btn" onclick="saveData()">💾 Save Data</button>
+        <button class="btn btn-success" onclick="exportToExcel()">📥 Export to Excel</button>
+        <button class="btn btn-danger" onclick="clearData()">🗑️ Clear All</button>
+        <label for="file-upload" class="btn">📂 Import Excel</label>
+        <input id="file-upload" type="file" class="file-input" accept=".xlsx,.xls" onchange="importExcel(event)">
+        <button class="btn" onclick="addRow()">➕ Add Row</button>
+    </div>
+
+    <div class="container">
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3>Total Ad Spend</h3>
+                <div class="value" id="totalSpend">€0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <div class="value" id="totalRevenue">€0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <div class="value" id="totalOrders">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Net Profit</h3>
+                <div class="value" id="totalProfit">€0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Average ROI</h3>
+                <div class="value" id="avgROI">0%</div>
+            </div>
+        </div>
+
+        <div id="spreadsheet"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@13.1.0/dist/handsontable.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // Initial data structure based on your Excel file
+        const initialData = [
+            ['2025-09-01', 'AktivJoint', '', '', 141.05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 'USD', 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, '']
+        ];
+
+        // Column headers matching your Excel structure
+        const columns = [
+            { data: 0, type: 'date', dateFormat: 'YYYY-MM-DD', title: 'Date', width: 100 },
+            { data: 1, type: 'text', title: 'Product', width: 100 },
+            { data: 2, type: 'text', title: 'Campaign Name', width: 150 },
+            { data: 3, type: 'text', title: 'Ad Set Name', width: 150 },
+            { data: 4, type: 'numeric', title: 'Ad Spend €', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 5, type: 'numeric', title: 'Impressions', numericFormat: { pattern: '0,0' }, width: 100 },
+            { data: 6, type: 'numeric', title: 'Clicks', numericFormat: { pattern: '0,0' }, width: 80 },
+            { data: 7, type: 'numeric', title: 'CTR', numericFormat: { pattern: '0.00%' }, width: 80 },
+            { data: 8, type: 'numeric', title: 'CPC', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 9, type: 'numeric', title: 'CPM', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 10, type: 'numeric', title: 'CVR', numericFormat: { pattern: '0.00%' }, width: 80 },
+            { data: 11, type: 'numeric', title: 'CPA', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 12, type: 'numeric', title: 'Sales Revenue', numericFormat: { pattern: '0,0.00' }, width: 120 },
+            { data: 13, type: 'numeric', title: 'AOV', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 14, type: 'numeric', title: 'Orders Total', numericFormat: { pattern: '0' }, width: 100 },
+            { data: 15, type: 'text', title: 'Check', width: 80 },
+            { data: 16, type: 'numeric', title: '1-Pack', numericFormat: { pattern: '0' }, width: 80 },
+            { data: 17, type: 'numeric', title: '2-Pack', numericFormat: { pattern: '0' }, width: 80 },
+            { data: 18, type: 'numeric', title: '3-Pack', numericFormat: { pattern: '0' }, width: 80 },
+            { data: 19, type: 'numeric', title: '4-Pack', numericFormat: { pattern: '0' }, width: 80 },
+            { data: 20, type: 'numeric', title: '5-Pack', numericFormat: { pattern: '0' }, width: 80 },
+            { data: 21, type: 'numeric', title: '6-Pack', numericFormat: { pattern: '0' }, width: 80 },
+            { data: 22, type: 'text', title: 'COG Currency', width: 80 },
+            { data: 23, type: 'numeric', title: 'COGS $', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 24, type: 'numeric', title: 'COGS €', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 25, type: 'numeric', title: 'Payment VAT', numericFormat: { pattern: '0,0.00' }, width: 100 },
+            { data: 26, type: 'numeric', title: 'Shopify Fee', numericFormat: { pattern: '0.00' }, width: 100 },
+            { data: 27, type: 'numeric', title: 'Provision Rate', numericFormat: { pattern: '0.00' }, width: 120 },
+            { data: 28, type: 'numeric', title: 'Refund Provision', numericFormat: { pattern: '0.00' }, width: 130 },
+            { data: 29, type: 'numeric', title: 'Adj Net Revenue', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 30, type: 'numeric', title: 'Adj Gross Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 31, type: 'numeric', title: 'Gross Margin %', numericFormat: { pattern: '0.00%' }, width: 120 },
+            { data: 32, type: 'numeric', title: 'Adj Net Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
+            { data: 33, type: 'numeric', title: 'Net Margin %', numericFormat: { pattern: '0.00%' }, width: 120 },
+            { data: 34, type: 'numeric', title: 'Ads ROI', numericFormat: { pattern: '0.00' }, width: 100 },
+            { data: 35, type: 'text', title: 'Notes', width: 150 }
+        ];
+
+        // Initialize Handsontable
+        const container = document.getElementById('spreadsheet');
+        const hot = new Handsontable(container, {
+            data: loadData() || initialData,
+            columns: columns,
+            rowHeaders: true,
+            colHeaders: true,
+            height: 'auto',
+            maxRows: 1000,
+            licenseKey: 'non-commercial-and-evaluation',
+            stretchH: 'all',
+            autoWrapRow: true,
+            autoWrapCol: true,
+            contextMenu: true,
+            filters: true,
+            dropdownMenu: true,
+            manualColumnResize: true,
+            manualRowResize: true,
+            afterChange: function(changes, source) {
+                if (source !== 'loadData') {
+                    calculateMetrics();
+                    updateStats();
+                    autoSave();
+                }
+            }
+        });
+
+        // Calculate derived metrics
+        function calculateMetrics() {
+            const data = hot.getData();
+            data.forEach((row, index) => {
+                if (row[4] && row[5]) { // Ad Spend and Impressions
+                    // CPM = (Ad Spend / Impressions) * 1000
+                    hot.setDataAtCell(index, 9, (row[4] / row[5]) * 1000);
+                }
+                if (row[4] && row[6]) { // Ad Spend and Clicks
+                    // CPC = Ad Spend / Clicks
+                    hot.setDataAtCell(index, 8, row[4] / row[6]);
+                }
+                if (row[5] && row[6]) { // Impressions and Clicks
+                    // CTR = (Clicks / Impressions) * 100
+                    hot.setDataAtCell(index, 7, (row[6] / row[5]) * 100);
+                }
+                if (row[12] && row[14]) { // Revenue and Orders
+                    // AOV = Revenue / Orders
+                    hot.setDataAtCell(index, 13, row[12] / row[14]);
+                }
+                if (row[4] && row[14]) { // Ad Spend and Orders
+                    // CPA = Ad Spend / Orders
+                    hot.setDataAtCell(index, 11, row[4] / row[14]);
+                }
+                // Calculate Adjusted Net Revenue (Revenue - Refund Provision)
+                if (row[12]) {
+                    const adjNetRevenue = row[12] - (row[28] || 0);
+                    hot.setDataAtCell(index, 29, adjNetRevenue);
+                }
+                // Calculate Adjusted Gross Profit (Adj Net Revenue - COGS)
+                if (row[29] && row[24]) {
+                    const adjGrossProfit = row[29] - row[24];
+                    hot.setDataAtCell(index, 30, adjGrossProfit);
+                }
+                // Calculate Gross Margin % (Adj Gross Profit / Adj Net Revenue)
+                if (row[30] && row[29]) {
+                    hot.setDataAtCell(index, 31, (row[30] / row[29]) * 100);
+                }
+                // Calculate Adjusted Net Profit (Adj Gross Profit - Ad Spend - Fees)
+                if (row[30] && row[4]) {
+                    const adjNetProfit = row[30] - row[4] - (row[26] || 0) - (row[25] || 0);
+                    hot.setDataAtCell(index, 32, adjNetProfit);
+                }
+                // Calculate Net Margin % (Adj Net Profit / Adj Net Revenue)
+                if (row[32] && row[29]) {
+                    hot.setDataAtCell(index, 33, (row[32] / row[29]) * 100);
+                }
+                // Calculate Ads ROI (Adj Net Profit / Ad Spend)
+                if (row[32] && row[4]) {
+                    hot.setDataAtCell(index, 34, row[32] / row[4]);
+                }
+            });
+        }
+
+        // Update dashboard stats
+        function updateStats() {
+            const data = hot.getData();
+            let totalSpend = 0, totalRevenue = 0, totalOrders = 0, totalProfit = 0, roiSum = 0, roiCount = 0;
+
+            data.forEach(row => {
+                totalSpend += row[4] || 0;
+                totalRevenue += row[12] || 0;
+                totalOrders += row[14] || 0;
+                totalProfit += row[32] || 0;
+                if (row[34]) {
+                    roiSum += row[34];
+                    roiCount++;
+                }
+            });
+
+            document.getElementById('totalSpend').textContent = '€' + totalSpend.toFixed(2);
+            document.getElementById('totalRevenue').textContent = '€' + totalRevenue.toFixed(2);
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalProfit').textContent = '€' + totalProfit.toFixed(2);
+            document.getElementById('avgROI').textContent = roiCount > 0 ? ((roiSum / roiCount) * 100).toFixed(2) + '%' : '0%';
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            const data = hot.getData();
+            localStorage.setItem('spreadsheetData', JSON.stringify(data));
+            alert('✅ Data saved successfully!');
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('spreadsheetData');
+            return saved ? JSON.parse(saved) : null;
+        }
+
+        // Auto-save every 30 seconds
+        function autoSave() {
+            const data = hot.getData();
+            localStorage.setItem('spreadsheetData', JSON.stringify(data));
+        }
+
+        // Clear all data
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                hot.loadData(initialData);
+                localStorage.removeItem('spreadsheetData');
+                updateStats();
+                alert('✅ Data cleared!');
+            }
+        }
+
+        // Add new row
+        function addRow() {
+            const newRow = new Array(36).fill('');
+            newRow[0] = new Date().toISOString().split('T')[0];
+            newRow[27] = 0.1; // Default provision rate
+            hot.alter('insert_row_below', hot.countRows());
+            hot.populateFromArray(hot.countRows() - 1, 0, [newRow]);
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            const data = hot.getData();
+            const headers = columns.map(col => col.title);
+            const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Funnel Data');
+            XLSX.writeFile(wb, 'Eliora-Funnel-Export-' + new Date().toISOString().split('T')[0] + '.xlsx');
+        }
+
+        // Import Excel
+        function importExcel(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    jsonData.shift(); // Remove header row
+                    hot.loadData(jsonData);
+                    calculateMetrics();
+                    updateStats();
+                    alert('✅ File imported successfully!');
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        // Initial calculations
+        calculateMetrics();
+        updateStats();
+
+        // Set up auto-save interval
+        setInterval(autoSave, 30000);
+    </script>
+</body>
+</html>
