@@ -123,6 +123,131 @@
             color: #667eea;
         }
 
+        /* Version History Sidebar */
+        .version-history-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .version-history-sidebar.open {
+            right: 0;
+        }
+
+        .version-history-header {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .version-history-header h2 {
+            font-size: 20px;
+        }
+
+        .close-history-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .version-list {
+            padding: 0;
+        }
+
+        .version-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .version-item:hover {
+            background: #f9fafb;
+        }
+
+        .version-item.active {
+            background: #eff6ff;
+            border-left: 4px solid #667eea;
+        }
+
+        .version-time {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .version-user {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .restore-btn, .preview-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .restore-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .restore-btn:hover {
+            background: #059669;
+        }
+
+        .preview-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .preview-btn:hover {
+            background: #5568d3;
+        }
+
+        .current-version-badge {
+            background: #fbbf24;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .no-versions {
+            padding: 40px 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
         /* Domain Selection */
         .domain-tabs {
             display: flex;
@@ -268,6 +393,14 @@
             background: #059669;
         }
 
+        .btn-warning {
+            background: #f59e0b;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
         /* Spreadsheet Container */
         .container {
             padding: 0 20px 20px 20px;
@@ -294,6 +427,19 @@
             color: #667eea;
             font-size: 18px;
         }
+
+        .preview-mode-banner {
+            background: #fbbf24;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .preview-mode-banner.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -316,6 +462,20 @@
                 <span class="user-name" id="userName"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
+        </div>
+
+        <!-- Preview Mode Banner -->
+        <div class="preview-mode-banner" id="previewBanner">
+            📋 PREVIEW MODE - Viewing previous version
+        </div>
+
+        <!-- Version History Sidebar -->
+        <div class="version-history-sidebar" id="versionHistorySidebar">
+            <div class="version-history-header">
+                <h2>📜 Version History</h2>
+                <button class="close-history-btn" onclick="closeVersionHistory()">✕</button>
+            </div>
+            <div class="version-list" id="versionList"></div>
         </div>
 
         <!-- Domain Selection -->
@@ -366,6 +526,7 @@
         <div class="toolbar">
             <button class="btn" onclick="addRow()">➕ Add Day</button>
             <button class="btn" onclick="saveData()">💾 Save Data</button>
+            <button class="btn btn-warning" onclick="openVersionHistory()">📜 Version History</button>
             <button class="btn btn-success" onclick="exportToExcel()">📥 Export Excel</button>
             <label for="file-upload" class="btn">📂 Import Excel</label>
             <input id="file-upload" type="file" class="file-input" accept=".xlsx,.xls" onchange="importExcel(event)">
@@ -425,6 +586,7 @@
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
         let hot;
+        let previewMode = false;
 
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
@@ -472,6 +634,7 @@
                     tab.classList.add('active');
                 }
             });
+            exitPreviewMode();
             loadData();
             updateCurrentView();
         }
@@ -485,6 +648,7 @@
                     btn.classList.add('active');
                 }
             });
+            exitPreviewMode();
             loadData();
             updateCurrentView();
         }
@@ -494,6 +658,7 @@
             currentMonth = monthIndex;
             document.querySelectorAll('.month-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.month-btn')[monthIndex].classList.add('active');
+            exitPreviewMode();
             loadData();
             updateCurrentView();
         }
@@ -540,7 +705,7 @@
                 dropdownMenu: true,
                 manualColumnResize: true,
                 afterChange: function(changes, source) {
-                    if (source !== 'loadData') {
+                    if (source !== 'loadData' && !previewMode) {
                         calculateMetrics();
                         updateStats();
                         autoSave();
@@ -554,27 +719,21 @@
         function calculateMetrics() {
             const data = hot.getData();
             data.forEach((row, index) => {
-                // CTR = (Clicks / Impressions) * 100
                 if (row[4] && row[5]) {
                     hot.setDataAtCell(index, 6, (row[5] / row[4]) * 100);
                 }
-                // CPC = Ad Spend / Clicks
                 if (row[3] && row[5]) {
                     hot.setDataAtCell(index, 7, row[3] / row[5]);
                 }
-                // AOV = Revenue / Orders
                 if (row[8] && row[9]) {
                     hot.setDataAtCell(index, 10, row[8] / row[9]);
                 }
-                // Gross Profit = Revenue - COGS
                 if (row[8] && row[11]) {
                     hot.setDataAtCell(index, 12, row[8] - row[11]);
                 }
-                // Net Profit = Gross Profit - Ad Spend
                 if (row[12] && row[3]) {
                     hot.setDataAtCell(index, 13, row[12] - row[3]);
                 }
-                // ROI = (Net Profit / Ad Spend) * 100
                 if (row[13] && row[3]) {
                     hot.setDataAtCell(index, 14, (row[13] / row[3]) * 100);
                 }
@@ -609,10 +768,43 @@
             return `asipu_${currentDomain}_${currentYear}_${currentMonth}`;
         }
 
+        // Version History Key
+        function getVersionHistoryKey() {
+            return `asipu_history_${currentDomain}_${currentYear}_${currentMonth}`;
+        }
+
+        // Save Version to History
+        function saveVersionToHistory(data) {
+            const historyKey = getVersionHistoryKey();
+            let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+
+            const version = {
+                timestamp: new Date().toISOString(),
+                user: localStorage.getItem('loggedInUser'),
+                data: JSON.stringify(data),
+                id: Date.now()
+            };
+
+            history.unshift(version); // Add to beginning
+
+            // Keep last 50 versions
+            if (history.length > 50) {
+                history = history.slice(0, 50);
+            }
+
+            localStorage.setItem(historyKey, JSON.stringify(history));
+        }
+
         // Save Data
         function saveData() {
+            if (previewMode) {
+                alert('⚠️ Cannot save in preview mode. Exit preview first.');
+                return;
+            }
+
             const data = hot.getData();
             localStorage.setItem(getStorageKey(), JSON.stringify(data));
+            saveVersionToHistory(data);
             alert('✅ Data saved successfully for ' + months[currentMonth] + ' ' + currentYear + '!');
         }
 
@@ -627,18 +819,25 @@
 
         // Auto Save
         function autoSave() {
+            if (previewMode) return;
+
             const data = hot.getData();
             localStorage.setItem(getStorageKey(), JSON.stringify(data));
+            saveVersionToHistory(data);
         }
 
-        // Generate Empty Row with current date
+        // Generate Empty Row
         function generateEmptyRow() {
             const date = new Date(currentYear, currentMonth, 1).toISOString().split('T')[0];
             return [date, '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ''];
         }
 
-        // Add Row (Add Day)
+        // Add Row
         function addRow() {
+            if (previewMode) {
+                alert('⚠️ Cannot add rows in preview mode.');
+                return;
+            }
             const newRow = generateEmptyRow();
             hot.alter('insert_row_below', hot.countRows());
             hot.populateFromArray(hot.countRows() - 1, 0, [newRow]);
@@ -657,6 +856,10 @@
 
         // Import Excel
         function importExcel(event) {
+            if (previewMode) {
+                alert('⚠️ Cannot import in preview mode.');
+                return;
+            }
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -672,6 +875,115 @@
                     alert('✅ File imported successfully!');
                 };
                 reader.readAsArrayBuffer(file);
+            }
+        }
+
+        // ========== VERSION HISTORY FUNCTIONS ==========
+
+        // Open Version History
+        function openVersionHistory() {
+            document.getElementById('versionHistorySidebar').classList.add('open');
+            loadVersionHistory();
+        }
+
+        // Close Version History
+        function closeVersionHistory() {
+            document.getElementById('versionHistorySidebar').classList.remove('open');
+            if (previewMode) {
+                exitPreviewMode();
+            }
+        }
+
+        // Load Version History List
+        function loadVersionHistory() {
+            const historyKey = getVersionHistoryKey();
+            const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+            const container = document.getElementById('versionList');
+
+            if (history.length === 0) {
+                container.innerHTML = '<div class="no-versions">No version history available yet.<br>Changes will be tracked automatically.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            history.forEach((version, index) => {
+                const item = document.createElement('div');
+                item.className = 'version-item';
+                if (index === 0) {
+                    item.classList.add('active');
+                }
+
+                const date = new Date(version.timestamp);
+                const timeStr = date.toLocaleString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                item.innerHTML = `
+                    <div class="version-time">
+                        ${timeStr}
+                        ${index === 0 ? '<span class="current-version-badge">CURRENT</span>' : ''}
+                    </div>
+                    <div class="version-user">Edited by: ${version.user}</div>
+                    <div class="version-actions">
+                        <button class="preview-btn" onclick="previewVersion(${version.id})">👁️ Preview</button>
+                        ${index !== 0 ? `<button class="restore-btn" onclick="restoreVersion(${version.id})">↩️ Restore</button>` : ''}
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+        }
+
+        // Preview Version
+        function previewVersion(versionId) {
+            const historyKey = getVersionHistoryKey();
+            const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+            const version = history.find(v => v.id === versionId);
+
+            if (version) {
+                previewMode = true;
+                document.getElementById('previewBanner').classList.add('active');
+                const data = JSON.parse(version.data);
+                hot.loadData(data);
+                calculateMetrics();
+                updateStats();
+            }
+        }
+
+        // Exit Preview Mode
+        function exitPreviewMode() {
+            if (previewMode) {
+                previewMode = false;
+                document.getElementById('previewBanner').classList.remove('active');
+                loadData();
+            }
+        }
+
+        // Restore Version
+        function restoreVersion(versionId) {
+            if (!confirm('Are you sure you want to restore this version? Current data will be replaced.')) {
+                return;
+            }
+
+            const historyKey = getVersionHistoryKey();
+            const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+            const version = history.find(v => v.id === versionId);
+
+            if (version) {
+                const data = JSON.parse(version.data);
+                localStorage.setItem(getStorageKey(), JSON.stringify(data));
+                saveVersionToHistory(data); // Save restoration as new version
+
+                exitPreviewMode();
+                loadData();
+                closeVersionHistory();
+
+                alert('✅ Version restored successfully!');
             }
         }
 
