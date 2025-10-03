@@ -13,8 +13,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f6f6f7;
         }
 
         /* Login Screen */
@@ -23,14 +23,14 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--secondary-color, #764ba2) 100%);
         }
 
         .login-box {
             background: white;
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             width: 400px;
         }
 
@@ -38,26 +38,34 @@
             text-align: center;
             color: #333;
             margin-bottom: 30px;
+            font-size: 24px;
         }
 
         .login-box input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 5px;
-            font-size: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
         }
 
         .login-box button {
             width: 100%;
-            padding: 12px;
-            background: #667eea;
+            padding: 14px;
+            background: var(--primary-color, #667eea);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .error-msg {
@@ -72,62 +80,65 @@
             display: none;
         }
 
-        /* Header */
+        /* Header - Shopify Style */
         .header {
-            background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--secondary-color, #764ba2) 100%);
+            background: var(--primary-color, #667eea);
             color: white;
-            padding: 20px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
         }
 
         .header h1 {
-            font-size: 28px;
+            font-size: 20px;
+            font-weight: 600;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .user-role {
-            background: rgba(255,255,255,0.2);
-            padding: 5px 12px;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
+            font-weight: 500;
         }
 
         .logout-btn, .customize-btn {
             padding: 8px 16px;
             background: rgba(255,255,255,0.2);
-            border: 2px solid white;
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover, .customize-btn:hover {
-            background: white;
-            color: var(--primary-color, #667eea);
+            background: rgba(255,255,255,0.3);
         }
 
-        /* Customization Panel */
+        /* Customization Panel - Only Mohammed */
         .customize-panel {
             position: fixed;
-            right: -350px;
+            right: -380px;
             top: 0;
-            width: 350px;
+            width: 380px;
             height: 100vh;
             background: white;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            box-shadow: -2px 0 20px rgba(0,0,0,0.1);
             transition: right 0.3s;
             z-index: 2000;
             overflow-y: auto;
-            padding: 20px;
+            padding: 24px;
         }
 
         .customize-panel.open {
@@ -135,107 +146,244 @@
         }
 
         .customize-panel h2 {
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 24px;
+            color: #202223;
+            font-size: 20px;
         }
 
         .customize-group {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
         .customize-group label {
             display: block;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #555;
+            color: #202223;
+            font-size: 13px;
         }
 
         .customize-group input[type="color"],
         .customize-group input[type="text"] {
             width: 100%;
-            padding: 8px;
-            border: 2px solid #e5e7eb;
-            border-radius: 5px;
+            padding: 10px;
+            border: 1px solid #c9cccf;
+            border-radius: 6px;
+            font-size: 14px;
         }
 
         .close-customize {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ef4444;
-            color: white;
+            top: 20px;
+            right: 20px;
+            background: #e4e5e7;
+            color: #202223;
             border: none;
-            padding: 5px 15px;
-            border-radius: 5px;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: 600;
         }
 
         .reset-customize {
             width: 100%;
-            padding: 10px;
-            background: #f59e0b;
-            color: white;
+            padding: 12px;
+            background: #f1f2f4;
+            color: #202223;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px;
+            font-weight: 600;
+            margin-top: 16px;
         }
 
-        /* TOP NAVIGATION */
+        /* TOP NAVIGATION - Shopify Style */
         .main-nav {
             background: white;
-            padding: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #e1e3e5;
+            padding: 0 24px;
             display: flex;
-            justify-content: center;
+            gap: 32px;
         }
 
         .main-nav-btn {
-            padding: 20px 40px;
-            background: white;
+            padding: 16px 0;
+            background: transparent;
             border: none;
-            border-bottom: 3px solid transparent;
+            border-bottom: 2px solid transparent;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            color: #6b7280;
-            transition: all 0.3s;
-            flex: 1;
-            max-width: 300px;
+            color: #6d7175;
+            transition: all 0.2s;
         }
 
         .main-nav-btn:hover {
-            background: #f9fafb;
-            color: var(--primary-color, #667eea);
+            color: #202223;
         }
 
         .main-nav-btn.active {
             color: var(--primary-color, #667eea);
             border-bottom-color: var(--primary-color, #667eea);
-            background: #f9fafb;
+        }
+
+        /* Dashboard View - Professional Layout */
+        .dashboard-view {
+            padding: 24px;
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-view.active {
+            display: block;
+        }
+
+        .dashboard-filters {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6d7175;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group select {
+            padding: 10px 14px;
+            border: 1px solid #c9cccf;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        /* Stats Cards - Shopify Style */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e1e3e5;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h3 {
+            font-size: 13px;
+            color: #6d7175;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .stat-icon.revenue {
+            background: #e7f5ef;
+            color: #00a866;
+        }
+
+        .stat-icon.expense {
+            background: #fff4e6;
+            color: #ff6b00;
+        }
+
+        .stat-icon.profit {
+            background: #e8f0ff;
+            color: #0058ff;
+        }
+
+        .stat-icon.orders {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #202223;
+            margin-bottom: 6px;
+        }
+
+        .stat-card .change {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .stat-card .change.positive {
+            color: #00a866;
+        }
+
+        .stat-card .change.negative {
+            color: #d72c0d;
         }
 
         /* Sub Navigation */
         .sub-nav {
             display: none;
-            background: #f9fafb;
-            padding: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e1e3e5;
         }
 
         .sub-nav.active {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .domain-tab {
-            padding: 12px 25px;
-            background: white;
-            border: 2px solid #e5e7eb;
+            padding: 10px 20px;
+            background: #f6f6f7;
+            border: 1px solid #e1e3e5;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            color: #202223;
         }
 
         .domain-tab.active {
@@ -247,11 +395,11 @@
         /* Time Navigation */
         .time-navigation {
             display: none;
-            padding: 20px;
+            padding: 20px 24px;
             background: white;
-            margin: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin: 0 24px 24px 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .time-navigation.active {
@@ -259,28 +407,34 @@
         }
 
         .nav-section {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .nav-label {
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 12px;
+            color: #202223;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .year-buttons, .month-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .year-btn, .month-btn {
-            padding: 10px 20px;
-            background: #f3f4f6;
-            border: 2px solid #e5e7eb;
-            border-radius: 5px;
+            padding: 10px 18px;
+            background: #f6f6f7;
+            border: 1px solid #e1e3e5;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: #202223;
         }
 
         .year-btn.active, .month-btn.active {
@@ -289,59 +443,37 @@
             border-color: var(--primary-color, #667eea);
         }
 
-        /* Views */
-        .dashboard-view, .price-list-view, .financials-view, .exchange-view {
-            padding: 20px;
-            display: none;
-        }
-
-        .dashboard-view.active, .price-list-view.active, .financials-view.active, .exchange-view.active {
-            display: block;
-        }
-
+        /* Raw Data View */
         .raw-data-view {
             display: none;
+            padding: 0;
         }
 
         .raw-data-view.active {
             display: block;
         }
 
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .dashboard-card {
+        .current-view {
+            padding: 16px 24px;
             background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin: 0 24px 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-color, #667eea);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .dashboard-card h3 {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 10px;
-        }
-
-        .dashboard-card .value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        /* Toolbar */
+        /* Toolbar - Shopify Style */
         .toolbar {
             background: white;
-            padding: 15px 20px;
-            margin: 0 20px 20px 20px;
+            padding: 16px 24px;
+            margin: 0 24px 24px 24px;
             display: flex;
-            gap: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-radius: 8px;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            border: 1px solid #e1e3e5;
         }
 
         .btn {
@@ -349,56 +481,51 @@
             background: var(--primary-color, #667eea);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.2s;
         }
 
         .btn:hover:not(:disabled) {
-            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .btn:disabled {
-            background: #9ca3af;
+            background: #c9cccf;
             cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .btn-success {
-            background: #10b981;
+            background: #00a866;
         }
 
-        .btn-warning {
-            background: #f59e0b;
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(0, 168, 102, 0.3);
         }
 
         /* Container */
         .container {
-            padding: 0 20px 20px 20px;
+            padding: 0 24px 24px 24px;
         }
 
-        #spreadsheet {
+        #spreadsheet, #priceListSpreadsheet {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .current-view {
-            padding: 15px 20px;
-            background: #f9fafb;
-            margin: 0 20px 20px 20px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--primary-color, #667eea);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e1e3e5;
         }
 
         .view-only-banner {
-            background: #ef4444;
-            color: white;
-            padding: 10px;
+            background: #ffd79d;
+            color: #663c00;
+            padding: 12px 24px;
             text-align: center;
+            font-weight: 600;
             display: none;
         }
 
@@ -411,7 +538,24 @@
         }
 
         .today-indicator {
-            background: #fbbf24 !important;
+            background: #fff9e6 !important;
+        }
+
+        /* Price List View */
+        .price-list-view {
+            padding: 24px;
+            display: none;
+        }
+
+        .price-list-view.active {
+            display: block;
+        }
+
+        .price-list-view h2 {
+            margin-bottom: 24px;
+            color: #202223;
+            font-size: 24px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -431,7 +575,7 @@
     <div id="app">
         <!-- Header -->
         <div class="header">
-            <h1 id="mainTitle">📊 Asipu Analytics Dashboard</h1>
+            <h1 id="mainTitle">📊 Asipu Analytics</h1>
             <div class="user-info">
                 <span id="userName"></span>
                 <span class="user-role" id="userRole"></span>
@@ -440,29 +584,24 @@
             </div>
         </div>
 
-        <!-- Customization Panel -->
+        <!-- Customization Panel - Mohammed Only -->
         <div class="customize-panel" id="customizePanel">
             <button class="close-customize" onclick="closeCustomize()">✕ Close</button>
             <h2>🎨 Customize Dashboard</h2>
 
             <div class="customize-group">
                 <label>App Title:</label>
-                <input type="text" id="customTitle" placeholder="Asipu Analytics Dashboard" onchange="applyCustomization()">
+                <input type="text" id="customTitle" placeholder="Asipu Analytics" onchange="applyCustomization()">
             </div>
 
             <div class="customize-group">
-                <label>Primary Color (Headers, Buttons):</label>
+                <label>Primary Color:</label>
                 <input type="color" id="customPrimaryColor" value="#667eea" onchange="applyCustomization()">
             </div>
 
             <div class="customize-group">
-                <label>Secondary Color (Gradient):</label>
+                <label>Secondary Color:</label>
                 <input type="color" id="customSecondaryColor" value="#764ba2" onchange="applyCustomization()">
-            </div>
-
-            <div class="customize-group">
-                <label>Login Title:</label>
-                <input type="text" id="customLoginTitle" placeholder="Asipu Analytics" onchange="applyCustomization()">
             </div>
 
             <button class="reset-customize" onclick="resetCustomization()">🔄 Reset to Default</button>
@@ -470,74 +609,132 @@
 
         <!-- View Only Banner -->
         <div class="view-only-banner" id="viewOnlyBanner">
-            🔒 VIEW ONLY MODE
+            🔒 VIEW ONLY MODE - You can only view data
         </div>
 
-        <!-- MAIN NAVIGATION -->
+        <!-- MAIN NAVIGATION (3 Sections Only) -->
         <div class="main-nav">
-            <button class="main-nav-btn" onclick="showSection('dashboard')">📈 Dashboard</button>
-            <button class="main-nav-btn active" onclick="showSection('raw-data')">📊 Raw Data</button>
+            <button class="main-nav-btn active" onclick="showSection('dashboard')">📈 Dashboard</button>
+            <button class="main-nav-btn" onclick="showSection('raw-data')">📊 Raw Data</button>
             <button class="main-nav-btn" onclick="showSection('price-list')">💰 Price List</button>
-            <button class="main-nav-btn" onclick="showSection('financials')">💼 Financials</button>
-            <button class="main-nav-btn" onclick="showSection('exchange')">💱 Exchange</button>
         </div>
 
         <!-- Domain Tabs -->
-        <div class="sub-nav active" id="domainNav">
+        <div class="sub-nav" id="domainNav">
             <button class="domain-tab active" onclick="switchDomain('asipu.de')">Asipu.de</button>
             <button class="domain-tab" onclick="switchDomain('asipu.fi')">Asipu.fi</button>
         </div>
 
         <!-- Time Navigation -->
-        <div class="time-navigation active" id="timeNav">
+        <div class="time-navigation" id="timeNav">
             <div class="nav-section">
-                <div class="nav-label">Year:</div>
+                <div class="nav-label">Year</div>
                 <div class="year-buttons" id="yearButtons"></div>
             </div>
             <div class="nav-section">
-                <div class="nav-label">Month:</div>
+                <div class="nav-label">Month</div>
                 <div class="month-buttons" id="monthButtons"></div>
             </div>
         </div>
 
         <!-- DASHBOARD VIEW -->
-        <div class="dashboard-view" id="dashboardView">
-            <div class="dashboard-cards">
-                <div class="dashboard-card">
-                    <h3>Total Revenue</h3>
-                    <div class="value">€0</div>
+        <div class="dashboard-view active" id="dashboardView">
+            <!-- Dashboard Filters -->
+            <div class="dashboard-filters">
+                <div class="filter-group">
+                    <label>Domain</label>
+                    <select id="dashDomain" onchange="updateDashboard()">
+                        <option value="all">All Domains</option>
+                        <option value="asipu.de">Asipu.de</option>
+                        <option value="asipu.fi">Asipu.fi</option>
+                    </select>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Total Ad Spend</h3>
-                    <div class="value">€0</div>
+                <div class="filter-group">
+                    <label>Year</label>
+                    <select id="dashYear" onchange="updateDashboard()"></select>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Total Orders</h3>
-                    <div class="value">0</div>
+                <div class="filter-group">
+                    <label>Month</label>
+                    <select id="dashMonth" onchange="updateDashboard()">
+                        <option value="all">All Months</option>
+                    </select>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Net Profit</h3>
-                    <div class="value">€0</div>
+                <div class="filter-group">
+                    <label>Period</label>
+                    <select id="dashPeriod" onchange="updateDashboard()">
+                        <option value="daily">Daily</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Average ROI</h3>
-                    <div class="value">0%</div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <h3>Total Revenue</h3>
+                        <div class="stat-icon revenue">💰</div>
+                    </div>
+                    <div class="value" id="dashRevenue">€0</div>
+                    <div class="change" id="dashRevenueChange"></div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Total COGS</h3>
-                    <div class="value">€0</div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <h3>Total Expenses</h3>
+                        <div class="stat-icon expense">💸</div>
+                    </div>
+                    <div class="value" id="dashExpenses">€0</div>
+                    <div class="change" id="dashExpensesChange"></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <h3>Net Profit</h3>
+                        <div class="stat-icon profit">📈</div>
+                    </div>
+                    <div class="value" id="dashProfit">€0</div>
+                    <div class="change positive" id="dashProfitChange"></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <h3>Total Orders</h3>
+                        <div class="stat-icon orders">📦</div>
+                    </div>
+                    <div class="value" id="dashOrders">0</div>
+                    <div class="change" id="dashOrdersChange"></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <h3>Average ROI</h3>
+                        <div class="stat-icon profit">💹</div>
+                    </div>
+                    <div class="value" id="dashROI">0%</div>
+                    <div class="change" id="dashROIChange"></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <h3>Profit Margin</h3>
+                        <div class="stat-icon profit">📊</div>
+                    </div>
+                    <div class="value" id="dashMargin">0%</div>
+                    <div class="change" id="dashMarginChange"></div>
                 </div>
             </div>
         </div>
 
-        <!-- RAW DATA VIEW (DEFAULT) -->
-        <div class="raw-data-view active" id="rawDataView">
+        <!-- RAW DATA VIEW -->
+        <div class="raw-data-view" id="rawDataView">
             <div class="current-view" id="currentView">Asipu.de - 2025 - January</div>
             <div class="toolbar" id="toolbar">
                 <button class="btn" id="addBtn" onclick="addRow()">➕ Add Day</button>
                 <button class="btn" id="saveBtn" onclick="saveData()">💾 Save Data</button>
                 <button class="btn btn-success" onclick="exportToExcel()">📥 Export Excel</button>
-                <label for="file-upload" class="btn" id="importLabel">📂 Import Excel</label>
+                <label for="file-upload" class="btn" id="importLabel">📂 Import</label>
                 <input id="file-upload" type="file" class="file-input" accept=".xlsx,.xls" onchange="importExcel(event)">
             </div>
             <div class="container">
@@ -547,25 +744,9 @@
 
         <!-- PRICE LIST VIEW -->
         <div class="price-list-view" id="priceListView">
-            <h2 style="margin-bottom:20px; color:#333;">Product Price List</h2>
+            <h2>💰 Product Price List</h2>
             <div class="container">
                 <div id="priceListSpreadsheet"></div>
-            </div>
-        </div>
-
-        <!-- FINANCIALS VIEW -->
-        <div class="financials-view" id="financialsView">
-            <h2 style="margin-bottom:20px; color:#333;">Financial Summary</h2>
-            <div class="container">
-                <div id="financialsSpreadsheet"></div>
-            </div>
-        </div>
-
-        <!-- EXCHANGE VIEW -->
-        <div class="exchange-view" id="exchangeView">
-            <h2 style="margin-bottom:20px; color:#333;">Currency Exchange Rates</h2>
-            <div class="container">
-                <div id="exchangeSpreadsheet"></div>
             </div>
         </div>
     </div>
@@ -573,24 +754,23 @@
     <script src="https://cdn.jsdelivr.net/npm/handsontable@13.1.0/dist/handsontable.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // Users
+        // Users - Only Mohammed can customize
         const users = {
-            'Mohammed': { password: 'admin123', role: 'super_admin', displayName: 'Mohammed' },
-            'Erica': { password: 'editor123', role: 'editor', displayName: 'Erica' },
-            'asipu-team': { password: 'viewer123', role: 'viewer', displayName: 'Asipu Team' }
+            'Mohammed': { password: 'admin123', role: 'super_admin', displayName: 'Mohammed', canCustomize: true },
+            'Erica': { password: 'editor123', role: 'editor', displayName: 'Erica', canCustomize: false },
+            'asipu-team': { password: 'viewer123', role: 'viewer', displayName: 'Asipu Team', canCustomize: false }
         };
 
         let currentUser = null;
-        let currentSection = 'raw-data'; // DEFAULT: Raw Data opens first
+        let currentSection = 'dashboard'; // Dashboard opens first
         let currentDomain = 'asipu.de';
         let currentYear = new Date().getFullYear();
         let currentMonth = new Date().getMonth();
-        let hot, priceListHot, financialsHot, exchangeHot;
+        let hot, priceListHot;
 
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                        'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // Load customizations on page load
         window.onload = function() {
             loadCustomization();
             const loggedInUser = localStorage.getItem('loggedInUser');
@@ -618,12 +798,12 @@
             document.getElementById('app').style.display = 'block';
             document.getElementById('userName').textContent = user.displayName;
 
-            const roleText = user.role === 'super_admin' ? 'Full Admin' : 
-                           user.role === 'editor' ? 'Editor Admin' : 'View Only';
+            const roleText = user.role === 'super_admin' ? 'Super Admin' : 
+                           user.role === 'editor' ? 'Editor' : 'Viewer';
             document.getElementById('userRole').textContent = roleText;
 
-            // Show customize button for Mohammed and Erica only
-            if (user.role === 'super_admin' || user.role === 'editor') {
+            // Only Mohammed can customize
+            if (user.canCustomize) {
                 document.getElementById('customizeBtn').style.display = 'inline-block';
             }
 
@@ -639,15 +819,17 @@
             location.reload();
         }
 
-        // CUSTOMIZATION FUNCTIONS
+        // Customization - Mohammed Only
         function openCustomize() {
+            if (!currentUser.canCustomize) {
+                alert('⚠️ Only Mohammed can customize the dashboard.');
+                return;
+            }
             document.getElementById('customizePanel').classList.add('open');
-            // Load current values
             const saved = JSON.parse(localStorage.getItem('asipu_customization') || '{}');
-            document.getElementById('customTitle').value = saved.title || 'Asipu Analytics Dashboard';
+            document.getElementById('customTitle').value = saved.title || 'Asipu Analytics';
             document.getElementById('customPrimaryColor').value = saved.primaryColor || '#667eea';
             document.getElementById('customSecondaryColor').value = saved.secondaryColor || '#764ba2';
-            document.getElementById('customLoginTitle').value = saved.loginTitle || 'Asipu Analytics';
         }
 
         function closeCustomize() {
@@ -655,20 +837,17 @@
         }
 
         function applyCustomization() {
-            const title = document.getElementById('customTitle').value || 'Asipu Analytics Dashboard';
+            const title = document.getElementById('customTitle').value || 'Asipu Analytics';
             const primaryColor = document.getElementById('customPrimaryColor').value;
             const secondaryColor = document.getElementById('customSecondaryColor').value;
-            const loginTitle = document.getElementById('customLoginTitle').value || 'Asipu Analytics';
 
-            // Apply changes
             document.getElementById('mainTitle').textContent = '📊 ' + title;
-            document.getElementById('appTitle').textContent = '🔐 ' + loginTitle;
+            document.getElementById('appTitle').textContent = '🔐 ' + title;
             document.documentElement.style.setProperty('--primary-color', primaryColor);
             document.documentElement.style.setProperty('--secondary-color', secondaryColor);
 
-            // Save to localStorage
             localStorage.setItem('asipu_customization', JSON.stringify({
-                title, primaryColor, secondaryColor, loginTitle
+                title, primaryColor, secondaryColor
             }));
         }
 
@@ -676,14 +855,14 @@
             const saved = JSON.parse(localStorage.getItem('asipu_customization') || '{}');
             if (saved.title) {
                 document.getElementById('mainTitle').textContent = '📊 ' + saved.title;
-                document.getElementById('appTitle').textContent = '🔐 ' + (saved.loginTitle || 'Asipu Analytics');
+                document.getElementById('appTitle').textContent = '🔐 ' + saved.title;
                 document.documentElement.style.setProperty('--primary-color', saved.primaryColor || '#667eea');
                 document.documentElement.style.setProperty('--secondary-color', saved.secondaryColor || '#764ba2');
             }
         }
 
         function resetCustomization() {
-            if (confirm('Reset all customizations to default?')) {
+            if (confirm('Reset all customizations?')) {
                 localStorage.removeItem('asipu_customization');
                 location.reload();
             }
@@ -693,8 +872,9 @@
         function initializeApp() {
             generateYearButtons();
             generateMonthButtons();
+            populateDashboardFilters();
             initializeSpreadsheets();
-            scrollToTodaysDate(); // AUTO-SCROLL TO TODAY
+            updateDashboard();
         }
 
         function generateYearButtons() {
@@ -721,40 +901,56 @@
             });
         }
 
+        function populateDashboardFilters() {
+            // Populate year filter
+            const yearSelect = document.getElementById('dashYear');
+            const currentYearNum = new Date().getFullYear();
+            for (let year = currentYearNum - 2; year <= currentYearNum + 2; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === currentYearNum) option.selected = true;
+                yearSelect.appendChild(option);
+            }
+
+            // Populate month filter
+            const monthSelect = document.getElementById('dashMonth');
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+        }
+
         // Section Navigation
         function showSection(section) {
             currentSection = section;
 
-            // Update nav buttons
             document.querySelectorAll('.main-nav-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Hide all views
-            document.querySelectorAll('.dashboard-view, .raw-data-view, .price-list-view, .financials-view, .exchange-view').forEach(view => {
+            document.querySelectorAll('.dashboard-view, .raw-data-view, .price-list-view').forEach(view => {
                 view.classList.remove('active');
             });
 
             const domainNav = document.getElementById('domainNav');
             const timeNav = document.getElementById('timeNav');
 
-            if (section === 'raw-data') {
+            if (section === 'dashboard') {
+                document.getElementById('dashboardView').classList.add('active');
+                domainNav.classList.remove('active');
+                timeNav.classList.remove('active');
+                updateDashboard();
+            } else if (section === 'raw-data') {
                 domainNav.classList.add('active');
                 timeNav.classList.add('active');
                 document.getElementById('rawDataView').classList.add('active');
                 scrollToTodaysDate();
-            } else {
+            } else if (section === 'price-list') {
+                document.getElementById('priceListView').classList.add('active');
                 domainNav.classList.remove('active');
                 timeNav.classList.remove('active');
-
-                if (section === 'dashboard') {
-                    document.getElementById('dashboardView').classList.add('active');
-                } else if (section === 'price-list') {
-                    document.getElementById('priceListView').classList.add('active');
-                } else if (section === 'financials') {
-                    document.getElementById('financialsView').classList.add('active');
-                } else if (section === 'exchange') {
-                    document.getElementById('exchangeView').classList.add('active');
-                }
             }
         }
 
@@ -768,7 +964,7 @@
             });
             loadData();
             updateCurrentView();
-            scrollToTodaysDate();
+            updateDashboard();
         }
 
         function selectYear(year) {
@@ -779,7 +975,7 @@
             });
             loadData();
             updateCurrentView();
-            scrollToTodaysDate();
+            updateDashboard();
         }
 
         function selectMonth(monthIndex) {
@@ -788,7 +984,7 @@
             document.querySelectorAll('.month-btn')[monthIndex].classList.add('active');
             loadData();
             updateCurrentView();
-            scrollToTodaysDate();
+            updateDashboard();
         }
 
         function updateCurrentView() {
@@ -796,7 +992,53 @@
                 `${currentDomain.toUpperCase()} - ${currentYear} - ${months[currentMonth]}`;
         }
 
-        // SCROLL TO TODAY'S DATE
+        // UPDATE DASHBOARD - Real-time from Raw Data
+        function updateDashboard() {
+            const domain = document.getElementById('dashDomain').value;
+            const year = parseInt(document.getElementById('dashYear').value);
+            const monthFilter = document.getElementById('dashMonth').value;
+
+            let totalRevenue = 0, totalExpenses = 0, totalOrders = 0, totalProfit = 0, roiSum = 0, roiCount = 0;
+
+            // Get data from all relevant periods
+            const domains = domain === 'all' ? ['asipu.de', 'asipu.fi'] : [domain];
+            const monthsToCheck = monthFilter === 'all' ? [0,1,2,3,4,5,6,7,8,9,10,11] : [parseInt(monthFilter)];
+
+            domains.forEach(d => {
+                monthsToCheck.forEach(m => {
+                    const key = `asipu_${d}_${year}_${m}`;
+                    const saved = localStorage.getItem(key);
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        data.forEach(row => {
+                            totalRevenue += row[12] || 0; // Sales Revenue
+                            totalExpenses += (row[4] || 0) + (row[24] || 0) + (row[25] || 0) + (row[26] || 0); // Ad Spend + COGS + VAT + Fees
+                            totalOrders += row[14] || 0; // Orders
+                            totalProfit += row[32] || 0; // Adj Net Profit
+                            if (row[34]) {
+                                roiSum += row[34];
+                                roiCount++;
+                            }
+                        });
+                    }
+                });
+            });
+
+            const profitMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100) : 0;
+            const avgROI = roiCount > 0 ? (roiSum / roiCount) : 0;
+
+            document.getElementById('dashRevenue').textContent = '€' + totalRevenue.toFixed(2);
+            document.getElementById('dashExpenses').textContent = '€' + totalExpenses.toFixed(2);
+            document.getElementById('dashProfit').textContent = '€' + totalProfit.toFixed(2);
+            document.getElementById('dashOrders').textContent = totalOrders;
+            document.getElementById('dashROI').textContent = avgROI.toFixed(2) + '%';
+            document.getElementById('dashMargin').textContent = profitMargin.toFixed(2) + '%';
+
+            // Color profit based on positive/negative
+            const profitEl = document.getElementById('dashProfit');
+            profitEl.style.color = totalProfit >= 0 ? '#00a866' : '#d72c0d';
+        }
+
         function scrollToTodaysDate() {
             setTimeout(() => {
                 const today = new Date();
@@ -812,7 +1054,6 @@
 
                 if (todayRowIndex !== -1) {
                     hot.scrollViewportTo(todayRowIndex, 0);
-                    // Highlight today's row
                     hot.updateSettings({
                         cells: function(row, col) {
                             const cellProperties = {};
@@ -830,43 +1071,42 @@
         const columns = [
             { data: 0, type: 'date', dateFormat: 'YYYY-MM-DD', title: 'Date', width: 100 },
             { data: 1, type: 'text', title: 'Product', width: 100 },
-            { data: 2, type: 'text', title: 'Campaign Name', width: 150 },
-            { data: 3, type: 'text', title: 'Ad Set Name', width: 150 },
+            { data: 2, type: 'text', title: 'Campaign', width: 130 },
+            { data: 3, type: 'text', title: 'Ad Set', width: 130 },
             { data: 4, type: 'numeric', title: 'Ad Spend €', numericFormat: { pattern: '0,0.00' }, width: 100 },
             { data: 5, type: 'numeric', title: 'Impressions', numericFormat: { pattern: '0,0' }, width: 100 },
             { data: 6, type: 'numeric', title: 'Clicks', numericFormat: { pattern: '0,0' }, width: 80 },
-            { data: 7, type: 'numeric', title: 'CTR %', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 8, type: 'numeric', title: 'CPC', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 9, type: 'numeric', title: 'CPM', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 10, type: 'numeric', title: 'CVR', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 11, type: 'numeric', title: 'CPA', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 12, type: 'numeric', title: 'Sales Revenue', numericFormat: { pattern: '0,0.00' }, width: 120 },
-            { data: 13, type: 'numeric', title: 'AOV', numericFormat: { pattern: '0.00' }, width: 80 },
-            { data: 14, type: 'numeric', title: 'Orders Total', numericFormat: { pattern: '0' }, width: 100 },
+            { data: 7, type: 'numeric', title: 'CTR %', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 8, type: 'numeric', title: 'CPC', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 9, type: 'numeric', title: 'CPM', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 10, type: 'numeric', title: 'CVR', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 11, type: 'numeric', title: 'CPA', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 12, type: 'numeric', title: 'Revenue €', numericFormat: { pattern: '0,0.00' }, width: 110 },
+            { data: 13, type: 'numeric', title: 'AOV', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 14, type: 'numeric', title: 'Orders', numericFormat: { pattern: '0' }, width: 80 },
             { data: 15, type: 'text', title: 'Check', width: 60 },
-            { data: 16, type: 'numeric', title: '1-Pack', width: 70 },
-            { data: 17, type: 'numeric', title: '2-Pack', width: 70 },
-            { data: 18, type: 'numeric', title: '3-Pack', width: 70 },
-            { data: 19, type: 'numeric', title: '4-Pack', width: 70 },
-            { data: 20, type: 'numeric', title: '5-Pack', width: 70 },
-            { data: 21, type: 'numeric', title: '6-Pack', width: 70 },
-            { data: 22, type: 'text', title: 'COG Currency', width: 80 },
-            { data: 23, type: 'numeric', title: 'COGS $', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 24, type: 'numeric', title: 'COGS €', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 25, type: 'numeric', title: 'Payment VAT', numericFormat: { pattern: '0,0.00' }, width: 100 },
-            { data: 26, type: 'numeric', title: 'Shopify Fee', numericFormat: { pattern: '0.00' }, width: 100 },
-            { data: 27, type: 'numeric', title: 'Provision Rate', numericFormat: { pattern: '0.00' }, width: 100 },
-            { data: 28, type: 'numeric', title: 'Refund', numericFormat: { pattern: '0.00' }, width: 100 },
-            { data: 29, type: 'numeric', title: 'Adj Revenue', numericFormat: { pattern: '0,0.00' }, width: 120 },
-            { data: 30, type: 'numeric', title: 'Adj Gross Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
-            { data: 31, type: 'numeric', title: 'Gross Margin %', numericFormat: { pattern: '0.00' }, width: 120 },
-            { data: 32, type: 'numeric', title: 'Adj Net Profit', numericFormat: { pattern: '0,0.00' }, width: 130 },
-            { data: 33, type: 'numeric', title: 'Net Margin %', numericFormat: { pattern: '0.00' }, width: 120 },
-            { data: 34, type: 'numeric', title: 'Ads ROI', numericFormat: { pattern: '0.00' }, width: 100 },
-            { data: 35, type: 'text', title: 'Notes', width: 200 }
+            { data: 16, type: 'numeric', title: '1-Pack', width: 60 },
+            { data: 17, type: 'numeric', title: '2-Pack', width: 60 },
+            { data: 18, type: 'numeric', title: '3-Pack', width: 60 },
+            { data: 19, type: 'numeric', title: '4-Pack', width: 60 },
+            { data: 20, type: 'numeric', title: '5-Pack', width: 60 },
+            { data: 21, type: 'numeric', title: '6-Pack', width: 60 },
+            { data: 22, type: 'text', title: 'Currency', width: 70 },
+            { data: 23, type: 'numeric', title: 'COGS $', numericFormat: { pattern: '0,0.00' }, width: 90 },
+            { data: 24, type: 'numeric', title: 'COGS €', numericFormat: { pattern: '0,0.00' }, width: 90 },
+            { data: 25, type: 'numeric', title: 'VAT', numericFormat: { pattern: '0,0.00' }, width: 80 },
+            { data: 26, type: 'numeric', title: 'Fees', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 27, type: 'numeric', title: 'Provision', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 28, type: 'numeric', title: 'Refund', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 29, type: 'numeric', title: 'Net Revenue', numericFormat: { pattern: '0,0.00' }, width: 110 },
+            { data: 30, type: 'numeric', title: 'Gross Profit', numericFormat: { pattern: '0,0.00' }, width: 110 },
+            { data: 31, type: 'numeric', title: 'Margin %', numericFormat: { pattern: '0.00' }, width: 80 },
+            { data: 32, type: 'numeric', title: 'Net Profit', numericFormat: { pattern: '0,0.00' }, width: 110 },
+            { data: 33, type: 'numeric', title: 'Net %', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 34, type: 'numeric', title: 'ROI', numericFormat: { pattern: '0.00' }, width: 70 },
+            { data: 35, type: 'text', title: 'Notes', width: 150 }
         ];
 
-        // Initialize Spreadsheets
         function initializeSpreadsheets() {
             const isViewOnly = currentUser.role === 'viewer';
 
@@ -875,14 +1115,19 @@
                 columns: columns,
                 rowHeaders: true,
                 colHeaders: true,
-                height: 500,
+                height: 600,
                 licenseKey: 'non-commercial-and-evaluation',
                 stretchH: 'all',
                 contextMenu: !isViewOnly,
                 readOnly: isViewOnly,
                 filters: true,
                 dropdownMenu: true,
-                manualColumnResize: true
+                manualColumnResize: true,
+                afterChange: function(changes, source) {
+                    if (source !== 'loadData') {
+                        updateDashboard(); // Update dashboard in real-time
+                    }
+                }
             });
 
             priceListHot = new Handsontable(document.getElementById('priceListSpreadsheet'), {
@@ -897,37 +1142,10 @@
                     ['HipRest', '1-Pack', '31.49', '€']
                 ],
                 colHeaders: ['Product', 'Pack Size', 'Price', 'Currency'],
-                height: 400,
+                height: 500,
                 licenseKey: 'non-commercial-and-evaluation',
-                readOnly: isViewOnly
-            });
-
-            financialsHot = new Handsontable(document.getElementById('financialsSpreadsheet'), {
-                data: [
-                    ['Total Revenue', '0', '€'],
-                    ['Total Ad Spend', '0', '€'],
-                    ['Total COGS', '0', '€'],
-                    ['Gross Profit', '0', '€'],
-                    ['Net Profit', '0', '€'],
-                    ['ROI', '0', '%']
-                ],
-                colHeaders: ['Metric', 'Value', 'Unit'],
-                height: 400,
-                licenseKey: 'non-commercial-and-evaluation',
-                readOnly: isViewOnly
-            });
-
-            exchangeHot = new Handsontable(document.getElementById('exchangeSpreadsheet'), {
-                data: [
-                    ['USD', 'EUR', '0.85'],
-                    ['EUR', 'USD', '1.18'],
-                    ['GBP', 'EUR', '1.15'],
-                    ['EUR', 'GBP', '0.87']
-                ],
-                colHeaders: ['From', 'To', 'Rate'],
-                height: 400,
-                licenseKey: 'non-commercial-and-evaluation',
-                readOnly: isViewOnly
+                readOnly: isViewOnly,
+                stretchH: 'all'
             });
 
             loadData();
@@ -944,7 +1162,8 @@
             }
             const data = hot.getData();
             localStorage.setItem(getStorageKey(), JSON.stringify(data));
-            alert('✅ Data saved!');
+            updateDashboard();
+            alert('✅ Data saved successfully!');
         }
 
         function loadData() {
@@ -954,7 +1173,7 @@
         }
 
         function generateEmptyRow() {
-            const date = new Date().toISOString().split('T')[0]; // TODAY'S DATE
+            const date = new Date().toISOString().split('T')[0];
             return [date, '', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 'USD', 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, ''];
         }
 
@@ -992,6 +1211,7 @@
                     const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
                     jsonData.shift();
                     hot.loadData(jsonData);
+                    updateDashboard();
                     alert('✅ Imported!');
                 };
                 reader.readAsArrayBuffer(file);
